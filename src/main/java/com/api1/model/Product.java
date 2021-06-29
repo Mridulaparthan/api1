@@ -14,8 +14,8 @@ public class Product {
 	@NotNull(message = "The Product Name cannot be empty")
 	@Size(max = 10, min = 1, message = "The name should be in range of 1 to 10 characters")
 	String productName;
-	@NotNull(message = "The Product Expiry Date cannot be empty")
-//	@ProductExpiryDate
+	@NotNull(message = "Enter the date in YYYY-MM-DD format")
+	@ProductExpiryDate
 	String productExpiryDate;
 
 	public String getProductId() {
@@ -48,6 +48,12 @@ public class Product {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	@Override
+	public String toString() {
+		return "Product [id=" + id + ", productId=" + productId + ", productName=" + productName
+				+ ", productExpiryDate=" + productExpiryDate + "]";
 	}
 
 }

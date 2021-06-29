@@ -6,20 +6,26 @@ import java.time.LocalDate;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class ProductExpiryDateValidator implements ConstraintValidator<ProductExpiryDate, String> {
+public class ProductExpiryDateValidator implements ConstraintValidator<ProductExpiryDate, String>
+{
+	 @Override
+	   public void initialize(ProductExpiryDate expDate)
+	 {
+	 }
+
 
 	@Override
-	public boolean isValid(String productExpiryDate, ConstraintValidatorContext context) {
-		if (productExpiryDate.matches("^\\d{4}-\\d{2}-\\d{2}$"))
+	public boolean isValid(String productExpiryDate, ConstraintValidatorContext context)
+	{
+		if(!productExpiryDate.matches("^\\d{4}-\\d{2}-\\d{2}$"))
 		{
-			if ((Date.valueOf(productExpiryDate)).after(Date.valueOf(LocalDate.now())))
-			{
-				return true;
-			}
-		return false;
+			return false;
 		}
-		return false;
-	
+		if(Date.valueOf(productExpiryDate).before(Date.valueOf(LocalDate.now())))
+		{
+			return false;
+		}
+		return true;
+				
 	}
-}
-		
+}		

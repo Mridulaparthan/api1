@@ -4,14 +4,12 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;
 
-@Target({ ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
-@Retention(RetentionPolicy.RUNTIME)
+@Documented
 @Constraint(validatedBy = ProductExpiryDateValidator.class)
+@Target( { ElementType.METHOD, ElementType.FIELD })
+@Retention(RetentionPolicy.RUNTIME)
 public @interface ProductExpiryDate {
-	  String message() default "{productExpiryDate}";
-
-	  Class<?>[] groups() default {};
-
-	  Class<? extends Payload>[] payload() default {};
-
+    String message() default "Enter a valid expiry date in YYYY-MM-DD format";
+    Class<?>[] groups() default {};
+    Class<? extends Payload>[] payload() default {};
 }

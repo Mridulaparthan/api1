@@ -22,6 +22,12 @@ import com.api1.service.ProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
+/**
+ * api1 Controller
+ * 
+ * @author Mridula
+ *
+ */
 @RestController
 @Api
 @RequestMapping("/api1")
@@ -30,6 +36,12 @@ public class Api1Controller {
 	@Autowired
 	ProductService serv;
 
+	/**
+	 * Get ProductById
+	 * 
+	 * @param productId product id
+	 * @return ResponseEntity<?> response Product
+	 */
 	@GetMapping("/search/{productId}")
 	@ApiOperation(value = "Search by Product ID")
 	public ResponseEntity<?> getProductById(@PathVariable String productId) {

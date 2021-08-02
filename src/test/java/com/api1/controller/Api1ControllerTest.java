@@ -40,9 +40,9 @@ class Api1ControllerTest {
 	public void setUp() {
 		product = new Product();
 		product.setId(1);
-		product.setProductId("G1");
+		product.setProductId("A1");
 		product.setProductName("Noodles");
-		product.setProductExpiryDate("2021-08-12");
+		product.setProductExpiryDate("2021-08-11");
 
 		view = new Response();
 		view.setProduct(product);
@@ -53,7 +53,7 @@ class Api1ControllerTest {
 	@Test
 	public void getProductByIdTest() throws Exception {
 		when(service.getProductById(product.getProductId())).thenReturn(view);
-		mock.perform(MockMvcRequestBuilders.get("/api1/search/G1").contentType(MediaType.APPLICATION_JSON)
+		mock.perform(MockMvcRequestBuilders.get("/api1/search/A1").contentType(MediaType.APPLICATION_JSON)
 				.content(new Gson().toJson(product))).andExpect(MockMvcResultMatchers.status().isOk());
 	}
 
@@ -75,7 +75,7 @@ class Api1ControllerTest {
 	public void deleteProductTest() throws Exception {
 		product.setProductExpiryDate("2020-06-25");
 		when(service.deleteProduct(product.getProductId())).thenReturn("SUCCESS");
-		mock.perform(MockMvcRequestBuilders.get("/api1/delete/G1").contentType(MediaType.APPLICATION_JSON)
+		mock.perform(MockMvcRequestBuilders.get("/api1/delete/A1").contentType(MediaType.APPLICATION_JSON)
 				.content(new Gson().toJson(product))).andExpect(MockMvcResultMatchers.status().isOk());
 
 	}

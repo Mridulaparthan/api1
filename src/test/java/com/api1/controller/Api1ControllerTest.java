@@ -1,11 +1,15 @@
 package com.api1.controller;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.sql.Date;
+import java.time.LocalDate;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -13,10 +17,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import com.api1.model.Api1Response;
 import com.api1.model.Product;
-import com.api1.model.Response;
 import com.api1.service.ProductService;
 import com.google.gson.Gson;
 
@@ -28,55 +31,56 @@ class Api1ControllerTest {
 	private MockMvc mock;
 
 	@MockBean
-	private ProductService service;
-
-	@InjectMocks
-	private Api1Controller controller;
+	private ProductService serv;
 
 	Product product;
-	Response view;
+	Api1Response response;
 
 	@BeforeEach
 	public void setUp() {
+
 		product = new Product();
 		product.setId(1);
-		product.setProductId("A1");
+		product.setProductId("G1");
 		product.setProductName("Noodles");
-		product.setProductExpiryDate("2021-08-11");
+		product.setProductExpiryDate(Date.valueOf(LocalDate.now()).toString());
 
-		view = new Response();
-		view.setProduct(product);
-		view.setStatus("NOT EXPIRED");
+		response = new Api1Response();
+		response.setProduct(product);
+		response.setStatus("NOT EXPIRED");
 
 	}
 
 	@Test
-	public void getProductByIdTest() throws Exception {
-		when(service.getProductById(product.getProductId())).thenReturn(view);
-		mock.perform(MockMvcRequestBuilders.get("/api1/search/A1").contentType(MediaType.APPLICATION_JSON)
-				.content(new Gson().toJson(product))).andExpect(MockMvcResultMatchers.status().isOk());
+	public void getProductById() throws Exception {
+
+		when(serv.getProductById(Mockito.anyString())).thenReturn(response);
+		mock.perform(MockMvcRequestBuilders.get("/api1/search/F1").accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
 	}
 
 	@Test
-	public void addProductTest() throws Exception {
-		when(service.addProduct(product)).thenReturn(product);
+	public void addProduct() throws Exception {
+
+		response.setStatus("PRODUCT SAVED");
+		when(serv.addProduct(Mockito.any())).thenReturn(response);
 		mock.perform(MockMvcRequestBuilders.post("/api1/add").contentType(MediaType.APPLICATION_JSON)
-				.content(new Gson().toJson(product))).andExpect(MockMvcResultMatchers.status().isCreated());
+				.content(new Gson().toJson(product)).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 	}
 
 	@Test
-	public void updateProductTest() throws Exception {
-		when(service.updateProduct(product)).thenReturn(product);
-		mock.perform(MockMvcRequestBuilders.post("/api1/update").contentType(MediaType.APPLICATION_JSON)
-				.content(new Gson().toJson(product))).andExpect(MockMvcResultMatchers.status().isOk());
+	public void updateProduct() throws Exception {
+		response.setStatus("PRODUCT UPDATED");
+		when(serv.updateProduct(Mockito.any())).thenReturn(response);
+		mock.perform(MockMvcRequestBuilders.post("/api1/update").content(new Gson().toJson(product))
+				.contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)).andExpect(status().isOk());
 	}
 
 	@Test
-	public void deleteProductTest() throws Exception {
-		product.setProductExpiryDate("2020-06-25");
-		when(service.deleteProduct(product.getProductId())).thenReturn("SUCCESS");
-		mock.perform(MockMvcRequestBuilders.get("/api1/delete/A1").contentType(MediaType.APPLICATION_JSON)
-				.content(new Gson().toJson(product))).andExpect(MockMvcResultMatchers.status().isOk());
+	public void deleteProduct() throws Exception {
+		when(serv.deleteProduct(Mockito.anyString())).thenReturn("SUCCESS");
+		mock.perform(MockMvcRequestBuilders.get("/api1/delete/G1").accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk());
 
 	}
 
